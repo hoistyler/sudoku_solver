@@ -7,3 +7,4 @@ all: sudoku_solver.cpp
 
 clean:
 	$(RM) sudoku_solver
+	$(RM) sudoku_solver.dSYM
