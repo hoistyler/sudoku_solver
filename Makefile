@@ -1,8 +1,9 @@
 RM=rm -r
 Q=@
+CFLAGS=-ggdb
 
 all: sudoku_solver.cpp
-	g++ -o sudoku_solver sudoku_solver.cpp -I.
+	g++ $(CFLAGS) -o sudoku_solver sudoku_solver.cpp -I.
 
 clean:
 	$(RM) sudoku_solver
