@@ -5,6 +5,14 @@ using namespace std;
 
 typedef int sudoku_element;
 
+static void PrintNumberArray(const int *numbers, const int size)
+{
+    for (int i = 0; i < size; ++i)
+    {
+        cout << numbers[i];
+    }
+}
+
 class Sudoku
 {
     public:
@@ -12,10 +20,12 @@ class Sudoku
         Sudoku(const vector<int> &numbers);
         ~Sudoku();
         void Print() const;
-        bool Validate_Line(int lineNum) const;
-        bool Validate_Box(int boxNum) const;
+        bool Validate_All() const;
     private:
         vector<sudoku_element> sudoku_;
+        int* GetRow(int rowNum) const;
+        int* GetColumn(int colNum) const;
+        int* GetBox(int boxNum) const;
 };
 
 /* Not needed
@@ -54,19 +64,117 @@ void Sudoku::Print() const
     }
 }
 
-bool Sudoku::Validate_Line(int lineNum) const
+bool Sudoku::Validate_All() const
 {
     bool res = true;
+
+    // Validate rows
+    for (int i = 0; i < 9; ++i)
+    {
+        int *numbers = GetRow(i);
+
+        cout << "Row " << i + 1 << " numbers: ";
+        PrintNumberArray(numbers, 9);
+        cout << endl;
+    }
+
+    // Validate columns
+    for (int i = 0; i < 9; ++i)
+    {
+        int *numbers = GetColumn(i);
+
+        cout << "Column " << i + 1 << " numbers: ";
+        PrintNumberArray(numbers, 9);
+        cout << endl;
+    }
+
+    // Validate boxes
+    for (int i = 0; i < 9; ++i)
+    {
+        int *numbers = GetBox(i);
+
+        cout << "Box " << i + 1 << " numbers: ";
+        PrintNumberArray(numbers, 9);
+        cout << endl;
+    }
 
     return res;
 }
 
-bool Sudoku::Validate_Box(int boxNum) const
+
+int* Sudoku::GetRow(int rowNum) const
+{
+    static int numbers[9];
+    int startIndex = rowNum * 9;
+
+    for (int i = 0; i < 9; ++i)
+    {
+        numbers[i] = sudoku_[startIndex + i];
+    }
+
+    return &(numbers[0]);
+}
+
+int* Sudoku::GetColumn(int colNum) const
+{
+    static int numbers[9];
+    for (int i = 0; i < 9; ++i)
+    {
+        numbers[i] = sudoku_[colNum + (i * 9)];
+    }
+
+    return &(numbers[0]);
+}
+
+int* Sudoku::GetBox(int boxNum) const
+{
+    static int numbers[9];
+    int startIndexes[9] = {0, 3, 6, 27, 30, 33, 54, 57, 60};
+    int startIndex = startIndexes[boxNum];
+
+    int index = startIndex;
+    int offset = 0;
+    for (int i = 0; i < 9; ++i)
+    {
+        if ( i == 3 || i == 6) 
+        {
+            index += 9;
+            offset = 0;
+        }
+
+        numbers[i] = sudoku_[index + offset];
+        offset++;
+    }
+
+    return &(numbers[0]);
+}
+
+
+/*
+bool Sudoku::Validate_Row(int rowNum) const
 {
     bool res = true;
+    int numberPool[9] = { 0,0,0,0,0,0,0,0,0 }; // used to validate line
+
+    int startIndex = (rowNum) * 9;
+
+    for (int i = 0; i < 9; ++i)
+    {
+        numberPool[sudoku_[startIndex + i] - 1] = 1;
+    }
+
+    for (int i = 0; i < 9; ++i)
+    {
+        if (!numberPool[i])
+        {
+            res = false;
+            cout << "Line " << rowNum + 1<< " " << "is missing : " << i + 1 << endl;
+        }
+    }
 
     return res;
 }
+*/
 
 
 int main(int argc, char* argv[])
@@ -86,6 +194,8 @@ int main(int argc, char* argv[])
 
     Sudoku my_sudoku(input);
 
+    my_sudoku.Validate_All();
+    
     my_sudoku.Print();
 
     return 0;
