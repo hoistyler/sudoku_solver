@@ -26,6 +26,7 @@ class Sudoku
         int* GetRow(int rowNum) const;
         int* GetColumn(int colNum) const;
         int* GetBox(int boxNum) const;
+        bool ValidateNumbers(int *numbers) const;
 };
 
 /* Not needed
@@ -76,6 +77,8 @@ bool Sudoku::Validate_All() const
         cout << "Row " << i + 1 << " numbers: ";
         PrintNumberArray(numbers, 9);
         cout << endl;
+
+        ValidateNumbers(numbers);
     }
 
     // Validate columns
@@ -86,6 +89,8 @@ bool Sudoku::Validate_All() const
         cout << "Column " << i + 1 << " numbers: ";
         PrintNumberArray(numbers, 9);
         cout << endl;
+
+        ValidateNumbers(numbers);
     }
 
     // Validate boxes
@@ -96,6 +101,8 @@ bool Sudoku::Validate_All() const
         cout << "Box " << i + 1 << " numbers: ";
         PrintNumberArray(numbers, 9);
         cout << endl;
+
+        ValidateNumbers(numbers);
     }
 
     return res;
@@ -150,17 +157,15 @@ int* Sudoku::GetBox(int boxNum) const
 }
 
 
-/*
-bool Sudoku::Validate_Row(int rowNum) const
+bool Sudoku::ValidateNumbers(int *numbers) const
 {
     bool res = true;
     int numberPool[9] = { 0,0,0,0,0,0,0,0,0 }; // used to validate line
 
-    int startIndex = (rowNum) * 9;
-
     for (int i = 0; i < 9; ++i)
     {
-        numberPool[sudoku_[startIndex + i] - 1] = 1;
+        // numbers[] is 1 to 9
+        numberPool[numbers[i] - 1] = numbers[i];
     }
 
     for (int i = 0; i < 9; ++i)
@@ -168,13 +173,12 @@ bool Sudoku::Validate_Row(int rowNum) const
         if (!numberPool[i])
         {
             res = false;
-            cout << "Line " << rowNum + 1<< " " << "is missing : " << i + 1 << endl;
+            cout << "Missing : " << i + 1 << endl;
         }
     }
 
     return res;
 }
-*/
 
 
 int main(int argc, char* argv[])
